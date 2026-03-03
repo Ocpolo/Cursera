@@ -1,5 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+from pathlib import Path
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
@@ -9,8 +10,21 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report, confusion_matrix, ConfusionMatrixDisplay
 import seaborn as sns
 #Load the dataset
-datos = r'C:/Users/Oiden/OneDrive - Universidad Nacional Abierta y a Distancia/Documents/Dataset/weatherAUS.csv'
-df = pd.read_csv(datos)   
+project_dir = Path(__file__).resolve().parent
+relative_dataset = project_dir / 'data' / 'weatherAUS.csv'
+legacy_dataset = Path(r'C:/Users/Oiden/OneDrive - Universidad Nacional Abierta y a Distancia/Documents/Dataset/weatherAUS.csv')
+
+if relative_dataset.exists():
+    dataset_path = relative_dataset
+elif legacy_dataset.exists():
+    dataset_path = legacy_dataset
+else:
+    raise FileNotFoundError(
+        "No se encontró weatherAUS.csv. Colócalo en './data/weatherAUS.csv' "
+        "o actualiza la ruta del dataset en cursera.py"
+    )
+
+df = pd.read_csv(dataset_path)   
 print(df.head())
 
 df.count()
